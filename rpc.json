@@ -1,0 +1,145 @@
+{
+  "ruleChain": {
+    "additionalInfo": {
+      "description": ""
+    },
+    "name": "RPC",
+    "type": "CORE",
+    "firstRuleNodeId": null,
+    "root": false,
+    "debugMode": false,
+    "configuration": null,
+    "externalId": null
+  },
+  "metadata": {
+    "firstNodeIndex": null,
+    "nodes": [
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 962,
+          "layoutY": 261
+        },
+        "type": "org.thingsboard.rule.engine.mqtt.TbMqttNode",
+        "name": "Downlink",
+        "debugMode": false,
+        "singletonMode": true,
+        "configuration": {
+          "topicPattern": "executescript/reporting/",
+          "host": "127.0.0.1",
+          "port": 1883,
+          "connectTimeoutSec": 10,
+          "clientId": null,
+          "cleanSession": true,
+          "retainedMessage": false,
+          "ssl": false,
+          "credentials": {
+            "type": "anonymous"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 160,
+          "layoutY": 315
+        },
+        "type": "org.thingsboard.rule.engine.debug.TbMsgGeneratorNode",
+        "name": "Enerji Analizörü",
+        "debugMode": false,
+        "singletonMode": false,
+        "configuration": {
+          "msgCount": 1000,
+          "periodInSeconds": 6,
+          "scriptLang": "JS",
+          "jsScript": "var state = [\n    'IDLE',\n    'HOIST',\n    'TROLLEY',\n    'GANTRY'\n];\n\nvar yük = [\n    'Yük Varken',\n    'Yüksüz'\n];\n\nvar randomState = Math.floor(Math.random()*state.length);\nvar randomYük = Math.floor(Math.random()*yük.length);\n\nvar rState = state[randomState];\nvar rYük   = yük[randomYük];\n\n\nvar msg = {     amperage: (15 + 3 * Math.random()).toFixed(1),\n             \tenergy: (300 + 700 * Math.random()).toFixed(1),\n                frequency: (48 + 2 * Math.random()).toFixed(1),\n                power: 45,\n                voltage: (220 + 10 * Math.random()).toFixed(1),\n                status: rState,\n                cargo: rYük\n};\nvar metadata = {};\nvar msgType = \"POST_TELEMETRY_REQUEST\";\n\nreturn { msg: msg, metadata: metadata, msgType: msgType };\n",
+          "tbelScript": null,
+          "queueName": "Main",
+          "originatorId": "134d3821-25ff-11ee-9c0b-a53a7980c9e6",
+          "originatorType": "DEVICE"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 453,
+          "layoutY": 470
+        },
+        "type": "org.thingsboard.rule.engine.rpc.TbSendRPCRequestNode",
+        "name": "mqtt-rpc",
+        "debugMode": false,
+        "singletonMode": false,
+        "configuration": {
+          "timeoutInSeconds": 60
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 450,
+          "layoutY": 419
+        },
+        "type": "org.thingsboard.rule.engine.rpc.TbSendRPCReplyNode",
+        "name": "rpc-mqtt",
+        "debugMode": false,
+        "singletonMode": false,
+        "configuration": {
+          "serviceIdMetaDataAttribute": "serviceId",
+          "sessionIdMetaDataAttribute": "sessionId",
+          "requestIdMetaDataAttribute": "requestId"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 499,
+          "layoutY": 312
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "send mqtt out at command",
+        "debugMode": false,
+        "singletonMode": false,
+        "configuration": {
+          "scriptLang": "JS",
+          "jsScript": "if(msg.power== 45){\n    return {msg: msg, metadata: metadata, msgType: msgType};}\nelse{return false}",
+          "tbelScript": ""
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 965,
+          "layoutY": 397
+        },
+        "type": "org.thingsboard.rule.engine.telemetry.TbMsgTimeseriesNode",
+        "name": "failure",
+        "debugMode": false,
+        "singletonMode": false,
+        "configuration": {
+          "defaultTTL": 0,
+          "skipLatestPersistence": false,
+          "useServerTs": false
+        },
+        "externalId": null
+      }
+    ],
+    "connections": [
+      {
+        "fromIndex": 1,
+        "toIndex": 4,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 4,
+        "toIndex": 5,
+        "type": "Failure"
+      }
+    ],
+    "ruleChainConnections": null
+  }
+}

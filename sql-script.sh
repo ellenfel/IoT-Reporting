@@ -33,9 +33,9 @@ ALTER TABLE last_veri DROP key_id, DROP telemetry;
 
 SELECT id, name,  key, ts, merged_column FROM last_veri;
 
-
-#COPY (SELECT * FROM last_veri) TO STDOUT WITH CSV HEADER;
 "
+#COPY (SELECT * FROM last_veri) TO STDOUT WITH CSV HEADER;
+
 
 # Execute SQL query and export the result to CSV
 export PGPASSWORD=$DB_PASS

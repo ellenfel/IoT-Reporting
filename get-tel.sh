@@ -5,7 +5,7 @@ while true; do
   response=$(curl -X 'GET' \
   'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/timeseries?keys=power' \
   -H 'accept: application/json' \
-  -H 'X-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZW5hbnRAdGhpbmdzYm9hcmQub3JnIiwidXNlcklkIjoiZDc2MDlkMTAtMWMxOC0xMWVlLTkyMGYtZmYzYjJiYTAyNmE5Iiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJzZXNzaW9uSWQiOiIxZmRmNmQwYi01NGZjLTQyMGItODIzMi1iNDQxZmY0MmUyMTciLCJpc3MiOiJ0aGluZ3Nib2FyZC5pbyIsImlhdCI6MTY5NjQxNTc3MSwiZXhwIjoxNjk2NDI0NzcxLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiZDcyZmM5MTAtMWMxOC0xMWVlLTkyMGYtZmYzYjJiYTAyNmE5IiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCJ9.U4lgwuuvwQwnFTfzlEEehkY5A6CdlWOQU_b-gQcyAUcFB8LykdTS-PeDb5Tltt4mMiKJtD1R4axtD2PV3fFpnw'
+  -H 'X-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZW5hbnRAdGhpbmdzYm9hcmQub3JnIiwidXNlcklkIjoiZDc2MDlkMTAtMWMxOC0xMWVlLTkyMGYtZmYzYjJiYTAyNmE5Iiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJzZXNzaW9uSWQiOiI4MmY1YzM5NC03ZTc0LTQ4ZTctODk0MS05MWQyM2U1YTQ3ZTgiLCJpc3MiOiJ0aGluZ3Nib2FyZC5pbyIsImlhdCI6MTY5NjQ4NjE1NSwiZXhwIjoxNjk2NDk1MTU1LCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiZDcyZmM5MTAtMWMxOC0xMWVlLTkyMGYtZmYzYjJiYTAyNmE5IiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCJ9.K_AUlSxuZqafI1R58IKG_BRzaK-3te8yg4MlFbA6S9pj34I_MoILs93J8ffBBSOXocWEnfXvnQ4NH3YZm96czQ'
 )
 
   # Parse the JSON response and extract the value
@@ -21,11 +21,13 @@ while true; do
 
     # Execute the POST request
     response1=$(curl -X 'POST' \
-    'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/timeseries/ANY?scope=ANY' \
-    -H 'accept: application/json' \
-    -H 'Content-Type: application/json' \
-    -H 'X-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZW5hbnRAdGhpbmdzYm9hcmQub3JnIiwidXNlcklkIjoiZDc2MDlkMTAtMWMxOC0xMWVlLTkyMGYtZmYzYjJiYTAyNmE5Iiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJzZXNzaW9uSWQiOiIxZmRmNmQwYi01NGZjLTQyMGItODIzMi1iNDQxZmY0MmUyMTciLCJpc3MiOiJ0aGluZ3Nib2FyZC5pbyIsImlhdCI6MTY5NjQxNTc3MSwiZXhwIjoxNjk2NDI0NzcxLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiZDcyZmM5MTAtMWMxOC0xMWVlLTkyMGYtZmYzYjJiYTAyNmE5IiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCJ9.U4lgwuuvwQwnFTfzlEEehkY5A6CdlWOQU_b-gQcyAUcFB8LykdTS-PeDb5Tltt4mMiKJtD1R4axtD2PV3fFpnw' \
-    -d '{"power": 4500}'
+  'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/timeseries/ANY?scope=ANY' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -H 'X-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZW5hbnRAdGhpbmdzYm9hcmQub3JnIiwidXNlcklkIjoiZDc2MDlkMTAtMWMxOC0xMWVlLTkyMGYtZmYzYjJiYTAyNmE5Iiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJzZXNzaW9uSWQiOiI4MmY1YzM5NC03ZTc0LTQ4ZTctODk0MS05MWQyM2U1YTQ3ZTgiLCJpc3MiOiJ0aGluZ3Nib2FyZC5pbyIsImlhdCI6MTY5NjQ4NjE1NSwiZXhwIjoxNjk2NDk1MTU1LCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiZDcyZmM5MTAtMWMxOC0xMWVlLTkyMGYtZmYzYjJiYTAyNmE5IiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCJ9.K_AUlSxuZqafI1R58IKG_BRzaK-3te8yg4MlFbA6S9pj34I_MoILs93J8ffBBSOXocWEnfXvnQ4NH3YZm96czQ' \
+  -d '{
+"power": 4500
+}'
 )
 
     echo "$response1"
@@ -35,5 +37,4 @@ while true; do
     sleep 5
   fi
 done
-
 

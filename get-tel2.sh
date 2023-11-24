@@ -12,3 +12,5 @@ response=$(curl -X 'GET' \
 
 echo "Response: $response"
 
+
+

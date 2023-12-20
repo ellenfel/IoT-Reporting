@@ -10,13 +10,11 @@ NEW_TOKEN=$($TOKEN_SCRIPT_PATH)
 # Replace the following line with your actual logic to update the token
 echo "Setting new token: $NEW_TOKEN"
 
-# Update the token in the main script
-
-#sed -i "s/YOUR_JWT_TOKEN/$NEW_TOKEN/" /path/to/your/main_script.sh
+# Store the new token in a local text file
+echo "$NEW_TOKEN" > /home/ellenfel/Desktop/reporting/jwt_token.txt
 
 # You might need to restart your main application or update a configuration file
 # Example: Restart the main application
 # systemctl restart your_application_service
 
 # You can add additional logic here based on your requirements
-

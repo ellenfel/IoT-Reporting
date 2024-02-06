@@ -13,6 +13,7 @@ while true; do
     echo "JWT token renewed: $YOUR_JWT_TOKEN"
   fi
 
+  sleep 15
 
   # Execute the GET request and store the response in a variable
   response=$(curl -X 'GET' \

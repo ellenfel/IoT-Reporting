@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Database credentials
-DB_NAME="thingsboard"
+DB_NAME="energy-consumption-forecast"
 DB_USER="postgres"
 DB_PASS="postgres"
 
@@ -10,19 +10,20 @@ SQL="
 
 WITH LastVeriWithRowNumber AS (
     SELECT
-        name,
+        devname,
         TO_TIMESTAMP(ts / 1000) AS formatted_ts,
         merged_column,
-        ROW_NUMBER() OVER (PARTITION BY name ORDER BY ts DESC) AS row_num
+        ROW_NUMBER() OVER (PARTITION BY devname ORDER BY ts DESC) AS row_num
     FROM last_veri
-    WHERE key = 'energy'
+    WHERE key = 'Active Energy'
 )
 SELECT
-    name,
+    devname,
     TO_CHAR(formatted_ts, 'DD/MM/YYYY') AS formatted_date,
     merged_column
 FROM LastVeriWithRowNumber
 WHERE row_num = 1;
+
 
 
 "

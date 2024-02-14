@@ -8,5 +8,4 @@ response=$(curl -X POST --header 'Content-Type: application/json' --header 'Acce
 JWT_TOKEN=$(echo "$response" | jq -r '.token')
 
 # Print the token
-echo $JWT_TOKEN
-
+echo $JWT_TOKENzzzZ

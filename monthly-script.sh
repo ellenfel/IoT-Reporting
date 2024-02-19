@@ -53,6 +53,103 @@ EOF
 echo "$CREATE_LAST_VERI" | PGPASSFILE=~/.pgpass psql -h localhost -U $DB_USER -d $DB_NAME
 echo "last_veri table created successfully"
 
+
+# Create a 'reports' folder if it doesn't exist
+mkdir -p reports
+
+# Function to export data to CSV for a specific device
+export_csv_for_device() {
+    local DEVICE_NAME="$1"
+    
+    # SQL query with parameters for exporting data to CSV for a specific device
+    CSV_QUERY=$(cat <<EOF
+    COPY (
+        WITH RECURSIVE DaySeries AS (
+            SELECT generate_series('$YEAR-$MONTH-01'::date, date_trunc('MONTH', '$YEAR-$MONTH-01'::date) + INTERVAL '1 MONTH' - INTERVAL '1 day', '1 day'::interval) AS day_of_month
+        )
+        SELECT
+            ds.day_of_month,
+            lv.devName AS device_name,  -- Include device_name in the SELECT clause
+            COALESCE(MAX(CASE WHEN lv.key = 'Active Energy' THEN lv.merged_column END), 'No Data') AS energy_value,
+            COALESCE(MAX(CASE WHEN lv.key = 'Active Power' THEN lv.merged_column END), 'No Data') AS power_value,
+            COALESCE(MAX(CASE WHEN lv.key = 'Frequency' THEN lv.merged_column END), 'No Data') AS Frequency
+        FROM
+            DaySeries ds
+        LEFT JOIN (
+            SELECT
+                TO_TIMESTAMP(ts/1000)::date AS day_of_month,
+                devName,
+                key,
+                merged_column,
+                ROW_NUMBER() OVER (PARTITION BY TO_TIMESTAMP(ts/1000)::date, key ORDER BY ts DESC) AS rn
+            FROM
+                last_veri
+            WHERE
+                TO_TIMESTAMP(ts/1000)::date >= '$YEAR-$MONTH-01' AND TO_TIMESTAMP(ts/1000)::date <= date_trunc('MONTH', '$YEAR-$MONTH-01'::date) + INTERVAL '1 MONTH' - INTERVAL '1 day'
+                AND devName = '$DEVICE_NAME'
+        ) lv ON ds.day_of_month = lv.day_of_month AND rn = 1
+        GROUP BY
+            ds.day_of_month, lv.devName  -- Include device_name in the GROUP BY clause
+        ORDER BY
+            ds.day_of_month
+    )
+    TO STDOUT WITH CSV HEADER;
+EOF
+    )
+
+    # Execute SQL query for exporting data to CSV
+    echo "$CSV_QUERY" | PGPASSFILE=~/.pgpass psql -h localhost -U $DB_USER -d $DB_NAME -A -F"," -t -o "reports/veri_energy_${DEVICE_NAME}_monthly.csv"
+    echo "Data exported to reports/veri_energy_${DEVICE_NAME}_monthly.csv successfully"
+}
+
+# Get the list of device names (excluding 'UG-67')
+DEVICE_NAMES=$(PGPASSFILE=~/.pgpass psql -h localhost -U $DB_USER -d $DB_NAME -At -c "SELECT DISTINCT name FROM device WHERE name <> 'UG-67';")
+
+# Iterate over each device name and export CSV
+for DEVICE_NAME in $DEVICE_NAMES; do
+    export_csv_for_device "$DEVICE_NAME"
+done
+
+echo "All data exported successfully"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # SQL query with parameters for exporting data to CSV
 EXPORT_TO_CSV=$(cat <<EOF
 -- SQL query to export data to CSV replacing NULL with 'No Data'

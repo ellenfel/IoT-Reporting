@@ -33,7 +33,7 @@ WHERE row_num = 1;
 # Execute SQL query and export the result to CSV
 export PGPASSWORD=$DB_PASS
 echo "$SQL" | psql -h localhost -U $DB_USER -d $DB_NAME -a -o veri_energy.csv
-echo "hey"
+echo "hey" 
 
 # Now, you can convert the CSV to XLS if desired. For example, using `ssconvert` (from Gnumeric package):
 # ssconvert veri.csv veri.xls

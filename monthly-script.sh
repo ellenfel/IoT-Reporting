@@ -98,9 +98,10 @@ EOF
     )
 
     # Execute SQL query for exporting data to CSV
-    echo "$CSV_QUERY" | PGPASSFILE=~/.pgpass psql -h localhost -U $DB_USER -d $DB_NAME -A -F"," -t -o "reports/veri_energy_${DEVICE_NAME}_monthly.csv"
+    echo "$CSV_QUERY" | PGPASSFILE=~/.pgpass psql -h localhost -U $DB_USER -d $DB_NAME -A -F"," -t -o "reports/veri_energy_${DEVICE_NAME}_monthly${MONTH}-${YEAR}.csv"
     echo "Data exported to reports/veri_energy_${DEVICE_NAME}_monthly.csv successfully"
 }
+veri_energy_${DEVICE_NAME}_monthly$(MONTH) -$(YEAR).csv
 
 # Get the list of device names (excluding 'UG-67')
 DEVICE_NAMES=$(PGPASSFILE=~/.pgpass psql -h localhost -U $DB_USER -d $DB_NAME -At -c "SELECT DISTINCT name FROM device WHERE name <> 'UG-67';")

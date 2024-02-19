@@ -88,4 +88,5 @@ SELECT id, devName, key, ts, merged_column
 FROM last_veri TABLESAMPLE BERNOULLI(0.1) REPEATABLE(42)
 WHERE devName <> 'UG-67';
 
+
 "

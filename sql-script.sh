@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Database credentials
-DB_NAME="thingsboard"
+DB_NAME="energy-consumption-forecast"
 DB_USER="postgres"
 DB_PASS="postgres"
 
@@ -14,7 +14,7 @@ CREATE TABLE veri
 AS (	SELECT device.Id, device.name,  ts_kv.ts, ts_kv.key, ts_kv.long_v, ts_kv.dbl_v, ts_kv.str_v, ts_kv.bool_v
 	FROM ts_kv JOIN device ON device.Id = ts_kv.entity_id);
 	
-ALTER TABLE veri ADD COLUMN merged_column varchar(255);
+ALTER TABLE veri ADD COLUMN merged_column varchar(512);
 
 UPDATE veri SET merged_column = CONCAT(bool_v, ' ', long_v, ' ',dbl_v,' ',str_v);
 

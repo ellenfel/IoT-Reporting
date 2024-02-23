@@ -28,7 +28,9 @@ while true; do
   # Check if the value is equal to "450"
   if [ "$value" = "450" ]; then
     # If the value is 450, execute the sql-script.sh script with sudo
-    sudo bash /home/ellenfel/Desktop/reporting/sql-script.sh
+    
+    #sudo bash /home/ellenfel/Desktop/reporting/sql-script.sh
+    sudo bash /home/ellenfel/Desktop/reporting/monthly-script.sh
 
     # Sleep for 15 seconds
     sleep 15

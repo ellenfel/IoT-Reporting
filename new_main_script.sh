@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Read the JWT token from the local text file
+YOUR_JWT_TOKEN=$(cat /home/ellenfel/Desktop/reporting/jwt_token.txt)
+
 while true; do
   # Renew the JWT token once an hour
   if [ $((SECONDS % 3600)) -eq 0 ]; then
@@ -10,27 +13,41 @@ while true; do
     echo "JWT token renewed: $YOUR_JWT_TOKEN"
   fi
 
-  # Execute the GET request and store the response in a variable
+
+  #Flag
+  # Execute the GET request and store the response in a variable / this should be the flag to gen report or not
   response=$(curl -X 'GET' \
-  'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/DEVICE_id/values/timeseries?keys=key' \
+  'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/timeseries?keys=key' \
   -H 'accept: application/json' \
   -H "X-Authorization: Bearer $YOUR_JWT_TOKEN"
   )
 
-  # Parse the JSON response and extract the value
+  # Parse the JSON response and extract the value {input 1}
   value=$(echo "$response" | jq -r '.key[0].value')
 
   # Check if the value is equal to "450"
   if [ "$value" = "450" ]; then
+
+  #IS IT MONTHLY        {input 2}
+    
+    #MONTH - YEAR       {input 2.1}
+      #Script-1
+
+  #IS IT DAIYLY         {input 3}
+
+    #MONTH - DAY - YEAR {input 3.1}
+      #Script-2
+
     # If the value is 450, execute the sql-script.sh script with sudo
-    sudo bash <dir>/sql-script.sh
+    sudo bash <dir>/sql-script.sh #(delete-this)
 
     # Sleep for 15 seconds
     sleep 15
 
+    #(this should be with-in if-else)
     # Execute the POST request
     response1=$(curl -X 'POST' \
-    'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/DEVICE_id/values/timeseries/ANY?scope=ANY' \
+    'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/timeseries/ANY?scope=ANY' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -H "X-Authorization: Bearer $YOUR_JWT_TOKEN" \

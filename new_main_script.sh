@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # Read the JWT token from the local text file
+bash /home/ellenfel/Desktop/reporting/renew_token.sh
 YOUR_JWT_TOKEN=$(cat /home/ellenfel/Desktop/reporting/jwt_token.txt)
 
 while true; do
   # Renew the JWT token once an hour
-  if [ $((SECONDS % 3600)) -eq 0 ]; then
+  if [ $((SECONDS % 3500)) -eq 0 ]; then
     # Execute renew_token.sh to renew the token
     /home/ellenfel/Desktop/reporting/renew_token.sh
     # Read the renewed JWT token from the local text file

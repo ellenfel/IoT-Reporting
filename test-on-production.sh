@@ -184,31 +184,22 @@ EOF
             }
 
 
-                        veri_energy_${DEVICE_NAME}_monthly$(month_input) -$(year_input).csv
+            veri_energy_${DEVICE_NAME}_monthly$(month_input) -$(year_input).csv
 
-                        # Get the list of device names (excluding 'UG-67')
-                        DEVICE_NAMES=$(PGPASSFILE=~/.pgpass psql -h localhost -U $DB_USER -d $DB_NAME -At -c "SELECT DISTINCT name FROM device WHERE name <> 'UG-67';")
+            # Get the list of device names (excluding 'UG-67')
+            DEVICE_NAMES=$(PGPASSFILE=~/.pgpass psql -h localhost -U $DB_USER -d $DB_NAME -At -c "SELECT DISTINCT name FROM device WHERE name <> 'UG-67';")
 
-                        # Iterate over each device name and export CSV
-                        for DEVICE_NAME in $DEVICE_NAMES; do
-                            export_csv_for_device "$DEVICE_NAME"
-                        done
+            # Iterate over each device name and export CSV
+            for DEVICE_NAME in $DEVICE_NAMES; do
+                export_csv_for_device "$DEVICE_NAME"
+            done
 
-                        echo "All data exported successfully"
-
-
-
-
-
-
-
-
-
-
+            echo "All data exported successfully"
             
 
 
         elif [ "$reportType" = "true" ]; then
+            echo type_is_daiyly
 
             #DAY
             response_day=$(curl -X 'GET' \
@@ -249,6 +240,54 @@ EOF
             sleep 10 
 
         fi
+
+
+        # Sleep for 15 seconds
+        sleep 5
+
+        # Execute the POST request
+        response1=$(curl -X 'POST' \
+        'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/timeseries/ANY?scope=ANY' \
+        -H 'accept: application/json' \
+        -H 'Content-Type: application/json' \
+        -H "X-Authorization: Bearer $YOUR_JWT_TOKEN" \
+        -d '{
+        "power": 4300
+        }'
+        )
+
+        echo "$response1"
+
+
+
+
+        # Sleep for 15 seconds
+        sleep 15
+
+        echo before_attribute_update
+        # Execute the POST request
+        response1=$(curl -X 'POST' \
+        'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/attributes/SERVER_SCOPE' \
+        -H 'accept: application/json' \
+        -H 'Content-Type: application/json' \
+        -H "X-Authorization: Bearer $YOUR_JWT_TOKEN" \
+        -d '{
+        "reportFlag": false
+        }'
+        )
+
+        echo "$response1"
+
+        # Sleep for 15 seconds
+
+        echo after_attribute_update
+
+        sleep 15
+
+
+
+
+
 
 
     else

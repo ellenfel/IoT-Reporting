@@ -116,41 +116,6 @@ echo "All data exported successfully"
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # SQL query with parameters for exporting data to CSV
 EXPORT_TO_CSV=$(cat <<EOF
 -- SQL query to export data to CSV replacing NULL with 'No Data'

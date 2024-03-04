@@ -1,6 +1,6 @@
 # reporting-IosPhere
 
-curl -X 'GET'   'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/timeseries?keys=power'   -H 'accept: application/json'   -H 'X-Authorization: Bearer $YOUR_JWT_TOKEN'
+curl -X 'GET'   'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/87fc84a0-41c5-11ee-a5d9-5d300dfdbc78/values/timeseries?keys=power'   -H 'accept: application/json'   -H 'X-Authorization: Bearer $YOUR_JWT_TOKEN'
 
 
 1 - get-token.sh  -> after executed outputs following:                      

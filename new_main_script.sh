@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Read the JWT token from the local text file
-bash /home/ellenfel/Desktop/reporting/renew_token.sh
-YOUR_JWT_TOKEN=$(cat /home/ellenfel/Desktop/reporting/jwt_token.txt)
+bash /home/nemport/IoT-Reporting/renew_token.sh
+YOUR_JWT_TOKEN=$(cat /home/nemport/IoT-Reporting/jwt_token.txt)
 
 while true; do
   # Renew the JWT token once an hour
   if [ $((SECONDS % 3500)) -eq 0 ]; then
     # Execute renew_token.sh to renew the token
-    /home/ellenfel/Desktop/reporting/renew_token.sh
+    /home/nemport/IoT-Reporting/renew_token.sh
     # Read the renewed JWT token from the local text file
-    YOUR_JWT_TOKEN=$(cat /home/ellenfel/Desktop/reporting/jwt_token.txt)
+    YOUR_JWT_TOKEN=$(cat /home/nemport/IoT-Reporting/jwt_token.txt)
     echo "JWT token renewed: $YOUR_JWT_TOKEN"
   fi
 
@@ -18,7 +18,7 @@ while true; do
   #Flag
   # Execute the GET request and store the response in a variable / this should be the flag to gen report or not
   response=$(curl -X 'GET' \
-  'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/timeseries?keys=key' \
+  'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/87fc84a0-41c5-11ee-a5d9-5d300dfdbc78/values/timeseries?keys=key' \
   -H 'accept: application/json' \
   -H "X-Authorization: Bearer $YOUR_JWT_TOKEN"
   )
@@ -48,7 +48,7 @@ while true; do
     #(this should be with-in if-else)
     # Execute the POST request
     response1=$(curl -X 'POST' \
-    'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/timeseries/ANY?scope=ANY' \
+    'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/87fc84a0-41c5-11ee-a5d9-5d300dfdbc78/values/timeseries/ANY?scope=ANY' \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -H "X-Authorization: Bearer $YOUR_JWT_TOKEN" \

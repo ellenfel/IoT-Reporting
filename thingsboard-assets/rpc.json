@@ -56,7 +56,7 @@
           "jsScript": "var state = [\n    'IDLE',\n    'HOIST',\n    'TROLLEY',\n    'GANTRY'\n];\n\nvar yük = [\n    'Yük Varken',\n    'Yüksüz'\n];\n\nvar randomState = Math.floor(Math.random()*state.length);\nvar randomYük = Math.floor(Math.random()*yük.length);\n\nvar rState = state[randomState];\nvar rYük   = yük[randomYük];\n\n\nvar msg = {     amperage: (15 + 3 * Math.random()).toFixed(1),\n             \tenergy: (300 + 700 * Math.random()).toFixed(1),\n                frequency: (48 + 2 * Math.random()).toFixed(1),\n                power: 45,\n                voltage: (220 + 10 * Math.random()).toFixed(1),\n                status: rState,\n                cargo: rYük\n};\nvar metadata = {};\nvar msgType = \"POST_TELEMETRY_REQUEST\";\n\nreturn { msg: msg, metadata: metadata, msgType: msgType };\n",
           "tbelScript": null,
           "queueName": "Main",
-          "originatorId": "134d3821-25ff-11ee-9c0b-a53a7980c9e6",
+          "originatorId": "87fc84a0-41c5-11ee-a5d9-5d300dfdbc78",
           "originatorType": "DEVICE"
         },
         "externalId": null

@@ -8,14 +8,12 @@
 #                                                                  #
 ####################################################################
 
-DB_NAME="energy-consumption-forecast"
+DB_NAME="thingsboard"
 DB_USER="postgres"
 DB_PASS="postgres"
 
-
-
-bash /home/ellenfel/Desktop/reporting/renew_token.sh
-YOUR_JWT_TOKEN=$(cat /home/ellenfel/Desktop/reporting/jwt_token.txt)
+bash /home/nemport/IoT-Reporting/renew_token.sh
+YOUR_JWT_TOKEN=$(cat /home/nemport/IoT-Reporting/jwt_token.txt)
 
 # Set the PGPASSFILE environment variable to specify the location of the .pgpass file
 export PGPASSFILE=~/.pgpass
@@ -61,13 +59,13 @@ EOF
 )
 
 
-while true; do
+while true; do # ther might be an issue here will need checking...
     # Renew the JWT token once an hour
     if [ $((SECONDS % 3500)) -eq 0 ]; then
         # Execute renew_token.sh to renew the token
-        /home/ellenfel/Desktop/reporting/renew_token.sh
+        /home/nemport/IoT-Reporting/renew_token.sh
         # Read the renewed JWT token from the local text file
-        YOUR_JWT_TOKEN=$(cat /home/ellenfel/Desktop/reporting/jwt_token.txt)
+        YOUR_JWT_TOKEN=$(cat /home/nemport/IoT-Reporting/jwt_token.txt)
         echo "JWT token renewed: $YOUR_JWT_TOKEN"
     fi
 
@@ -76,7 +74,7 @@ while true; do
 
     #Flag - first input
     response_flag=$(curl -X 'GET' \
-    'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/attributes?keys=reportFlag' \
+    'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/87fc84a0-41c5-11ee-a5d9-5d300dfdbc78/values/attributes?keys=reportFlag' \
     -H 'accept: application/json' \
     -H "X-Authorization: Bearer $YOUR_JWT_TOKEN"
     )
@@ -92,7 +90,7 @@ while true; do
         sleep 1
 
         response_type=$(curl -X 'GET' \
-        'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/attributes?keys=type' \
+        'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/87fc84a0-41c5-11ee-a5d9-5d300dfdbc78/values/attributes?keys=type' \
         -H 'accept: application/json' \
         -H "X-Authorization: Bearer $YOUR_JWT_TOKEN"
         )
@@ -109,14 +107,21 @@ while true; do
 
             #MONTH
             response_month=$(curl -X 'GET' \
-            'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/attributes?keys=month' \
+            'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/87fc84a0-41c5-11ee-a5d9-5d300dfdbc78/values/attributes?keys=month' \
             -H 'accept: application/json' \
             -H "X-Authorization: Bearer $YOUR_JWT_TOKEN"
             )
 
             #YEAR
             response_year=$(curl -X 'GET' \
-            'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/attributes?keys=year' \
+            'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/87fc84a0-41c5-11ee-a5d9-5d300dfdbc78/values/attributes?keys=year' \
+            -H 'accept: application/json' \
+            -H "X-Authorization: Bearer $YOUR_JWT_TOKEN"
+            )
+
+            #DATE
+            response_date=$(curl -X 'GET' \
+            'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/87fc84a0-41c5-11ee-a5d9-5d300dfdbc78/values/attributes?keys=date' \
             -H 'accept: application/json' \
             -H "X-Authorization: Bearer $YOUR_JWT_TOKEN"
             )
@@ -129,6 +134,10 @@ while true; do
             year_input=$(echo "$response_year" | jq -r '.[0].value')
             echo $year_input
             sleep 5
+
+            date_input=$(echo "$response_date" | jq -r '.[0].value')
+            echo $date_input
+            sleep 15
 
 
             # Execute SQL query for creating last_veri table
@@ -203,21 +212,21 @@ EOF
 
             #DAY
             response_day=$(curl -X 'GET' \
-            'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/attributes?keys=day' \
+            'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/87fc84a0-41c5-11ee-a5d9-5d300dfdbc78/values/attributes?keys=day' \
             -H 'accept: application/json' \
             -H "X-Authorization: Bearer $YOUR_JWT_TOKEN"
             )
 
             #MONTH
             response_month=$(curl -X 'GET' \
-            'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/attributes?keys=month' \
+            'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/87fc84a0-41c5-11ee-a5d9-5d300dfdbc78/values/attributes?keys=month' \
             -H 'accept: application/json' \
             -H "X-Authorization: Bearer $YOUR_JWT_TOKEN"
             )
 
             #YEAR
             response_year=$(curl -X 'GET' \
-            'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/values/attributes?keys=year' \
+            'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/87fc84a0-41c5-11ee-a5d9-5d300dfdbc78/values/attributes?keys=year' \
             -H 'accept: application/json' \
             -H "X-Authorization: Bearer $YOUR_JWT_TOKEN"
             )
@@ -234,31 +243,12 @@ EOF
             echo $year_input
             sleep 5
 
-        else
+        else 
             # If the value is not 450, sleep for 5 seconds and then try again
-            echo will-check-again...
+            echo There-is-an-issue-with-flag
             sleep 10 
 
         fi
-
-
-        # Sleep for 15 seconds
-        sleep 5
-
-        # Execute the POST request
-        response1=$(curl -X 'POST' \
-        'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/timeseries/ANY?scope=ANY' \
-        -H 'accept: application/json' \
-        -H 'Content-Type: application/json' \
-        -H "X-Authorization: Bearer $YOUR_JWT_TOKEN" \
-        -d '{
-        "power": 4300
-        }'
-        )
-
-        echo "$response1"
-
-
 
 
         # Sleep for 15 seconds
@@ -267,7 +257,7 @@ EOF
         echo before_attribute_update
         # Execute the POST request
         response1=$(curl -X 'POST' \
-        'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/134d3821-25ff-11ee-9c0b-a53a7980c9e6/attributes/SERVER_SCOPE' \
+        'http://127.0.0.1:8080/api/plugins/telemetry/DEVICE/87fc84a0-41c5-11ee-a5d9-5d300dfdbc78/attributes/SERVER_SCOPE' \
         -H 'accept: application/json' \
         -H 'Content-Type: application/json' \
         -H "X-Authorization: Bearer $YOUR_JWT_TOKEN" \
@@ -283,11 +273,6 @@ EOF
         echo after_attribute_update
 
         sleep 15
-
-
-
-
-
 
 
     else

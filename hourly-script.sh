@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DB_NAME="energy-consumption-forecast"
+DB_NAME="thingsboard"
 DB_USER="postgres"
 DB_PASS="postgres"
 DAY=6

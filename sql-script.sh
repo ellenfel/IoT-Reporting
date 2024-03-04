@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Database credentials
-DB_NAME="energy-consumption-forecast"
+DB_NAME="thingsboard"
 DB_USER="postgres"
 DB_PASS="postgres"
 

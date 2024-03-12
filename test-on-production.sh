@@ -16,7 +16,7 @@ bash /home/nemport/IoT-Reporting/renew_token.sh
 YOUR_JWT_TOKEN=$(cat /home/nemport/IoT-Reporting/jwt_token.txt)
 
 # Set the PGPASSFILE environment variable to specify the location of the .pgpass file
-export PGPASSFILE=~/.pgpass
+#export PGPASSFILE=~/.pgpass
 
 # SQL query with parameters for creating last_veri table
 CREATE_LAST_VERI=$(cat <<EOF
@@ -141,7 +141,7 @@ while true; do # ther might be an issue here will need checking...
 
 
             # Execute SQL query for creating last_veri table
-            echo "$CREATE_LAST_VERI" | PGPASSFILE=~/.pgpass psql -h localhost -U $DB_USER -d $DB_NAME
+            echo "$CREATE_LAST_VERI" | PGPASSWORD=$DB_PASS psql -h localhost -U $DB_USER -d $DB_NAME
             echo "last_veri table created successfully"
 
             # Create a 'reports' folder if it doesn't exist
@@ -188,7 +188,7 @@ EOF
     )
 
                 # Execute SQL query for exporting data to CSV
-                echo "$CSV_QUERY" | PGPASSFILE=~/.pgpass psql -h localhost -U $DB_USER -d $DB_NAME -A -F"," -t -o "reports/veri_energy_${DEVICE_NAME}_monthly${month_input}-${year_input}.csv"
+                echo "$CSV_QUERY" | PGPASSWORD=$DB_PASS psql -h localhost -U $DB_USER -d $DB_NAME -A -F"," -t -o "reports/veri_energy_${DEVICE_NAME}_monthly${month_input}-${year_input}.csv"
                 echo "Data exported to reports/veri_energy_${DEVICE_NAME}_monthly.csv successfully"
             }
 
@@ -196,7 +196,7 @@ EOF
             veri_energy_${DEVICE_NAME}_monthly$(month_input) -$(year_input).csv
 
             # Get the list of device names (excluding 'UG-67')
-            DEVICE_NAMES=$(PGPASSFILE=~/.pgpass psql -h localhost -U $DB_USER -d $DB_NAME -At -c "SELECT DISTINCT name FROM device WHERE name <> 'UG-67';")
+            DEVICE_NAMES=$(PGPASSWORD=$DB_PASS psql -h localhost -U $DB_USER -d $DB_NAME -At -c "SELECT DISTINCT name FROM device WHERE name <> 'UG-67';")
 
             # Iterate over each device name and export CSV
             for DEVICE_NAME in $DEVICE_NAMES; do
